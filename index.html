@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://kit.fontawesome.com/7ee1aa8e76.js" crossorigin="anonymous"></script>
+    
+</head>
+
+<style>
+
+    *{
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        outline: none;
+        text-decoration: none;
+        box-sizing: border-box;
+    }
+    body{
+        font-family:sans-serif;
+        overflow-x: hidden;
+    }
+
+    .container{
+        position: relative;
+        width: 100%;    
+        padding-bottom: 30px;
+    }
+    .topbar{
+        width: 100%;
+        height: 8vh;   
+        background: rgb(0, 0, 100);
+        padding: 0px 50px;
+        display: flex; 
+        justify-content: space-between;
+        align-items: center !important;
+    }
+    .topbar h2{
+        color: white;  
+        font-size: 30px;
+    }
+
+    .topbar input{
+        width: 25%;
+        height:5vh ;
+        padding-left: 10px;
+        font-size: 16px;
+        border-radius: 20px;
+        color: white;
+        border: none;
+        box-shadow: 0 0 3px white;
+        background: transparent;
+        transition: all .3s ease-in-out;
+    }
+ 
+       .topbar>input::placeholder{
+        color: white;
+    }
+    .topbar input:focus{
+        border: 1px solid white;
+    }
+
+    .serchicon{
+        position: absolute;
+        font-size: 18px;
+        color: #fff;
+        right: 5%;
+    }
+
+    h1{
+        text-align: center;
+        margin: 50px 0;
+    }
+
+    .main{
+        width:40%;
+        box-shadow: 0 0 2px;
+        margin:0 auto;
+        padding: 5px 10px;
+    }
+
+    .main div{
+        width: 100%;
+        margin: 10px 0 ;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .main>div>input{
+        width: 60%;
+        height:6vh;
+        padding-left: 10px;
+        font-size: 16px;
+      
+    }
+
+    .addtaskbtn ,.removeallbtn{
+        width: 90px;
+        height: 5.3vh;
+        color:white;
+        border: none;
+        border-radius: 5px;
+        font-size: 14.5px;
+        text-transform: capitalize;
+    }
+
+    .addtaskbtn{
+        background: #055705;
+        
+    }
+    .removeallbtn{
+        background: red;
+    }
+    .update{
+
+       display: none;
+    }
+
+    ul{
+        padding: 10px 0;
+    }
+
+    ul li{
+        position: relative;
+        width: 100%;
+        height: 7vh;
+        font-size: 18px;
+        color: rgba(0, 0, 0, 0.7);
+        padding: 0 10px;
+        border-radius:5px ;
+        display: flex;
+        align-items: center;
+        /* margin: 5px 0; */
+     
+    }
+    ul li:nth-child(odd){
+        background: #dbdbe7;
+    }
+
+    li>button{
+        position: absolute;
+        padding: 2px 5px;
+        font-size: 14px;
+        border: none;
+        margin: 0 10px;
+        cursor: pointer;
+    }
+
+    .edit{
+        /* border: 1px solid blue; */
+        color: blue;
+        right: 15%;
+        background: transparent;
+    }
+
+    .delete{
+        background: transparent;
+        /* border: 1px solid red; */
+        color: red;
+        right: 0%;
+    }
+
+    .indax{
+        margin-right: 30px;
+        font-size: 16px;
+      
+    }
+
+
+</style>
+
+
+<body>
+    <div class="container">
+
+        <div class="topbar">
+            <h2>Todo List</h2>
+            <input type="text" id="search" placeholder="search" oninput="searchdata(event)">
+            <i class="fas fa-search serchicon"></i>
+
+        </div>
+
+        <h1>Welcome in Todo List Application</h1>
+
+        <div class="main">
+
+            <div>
+                <input type="text" placeholder="Enter task" class="taskinput" name="name">
+                <input type="hidden" class="saveindax">
+
+                <button class="addtaskbtn">Add Task</button>
+                <button class="addtaskbtn update" >Update</button>
+                <button class="removeallbtn">Remove All</button>
+            </div>
+            <ul>
+                <!-- <li class="list">Good Morning 
+                    <button class="edit">Edit</button>
+                    <button class="delete">Delete</button>
+                </li>
+                <li class="list">Good Morning 
+                    <button class="edit">Edit</button>
+                    <button class="delete">Delete</button>
+                </li>
+                <li class="list">Good Morning 
+                    <button class="edit">Edit</button>
+                    <button class="delete">Delete</button>
+                </li> -->
+            </ul>
+        </div>
+
+    </div>
+    </body>
+
+
+
+<script>
+
+    var taskinput = document.getElementsByClassName('taskinput')[0];
+    var saveindax = document.getElementsByClassName('saveindax')[0];
+
+    var addtaskbtn = document.getElementsByClassName('addtaskbtn')[0];
+    var removeallbtn = document.getElementsByClassName('removeallbtn')[0];
+    var update = document.querySelector('.update');
+
+    var ul = document.querySelector('ul');
+
+    addtaskbtn.addEventListener('click',()=>{
+        
+        if(taskinput.value){
+            var arylist = localStorage.getItem('todolist')
+
+            if(arylist){
+                arylist = JSON.parse(arylist);
+                arylist.push(taskinput.value)
+                localStorage.setItem('todolist',JSON.stringify(arylist))
+                taskinput.value = "";
+                show()
+            }
+            else{
+                localStorage.setItem('todolist',JSON.stringify([taskinput.value]))
+                taskinput.value = "";
+                show()
+
+            }
+        }
+        
+    })
+
+    function show(){
+        var arylist = localStorage.getItem('todolist')
+        if(arylist){
+                arylist = JSON.parse(arylist)
+                listhtml = "";
+                arylist.forEach((ele ,indax)=>{
+                    listhtml +=` <li class="list"><h1 class="indax">${indax+1}</h1>${ele}
+                                    <button class="edit" onclick="editindax(${indax})">
+                                        <i class="far fa-edit"></i>Edit
+                                    </button>
+                                    <button class="delete" onclick="deleteindax(${indax})">
+                                        <i class="far fa-trash-alt"></i> Delete
+                                    </button>
+                                </li>`
+                    
+            })
+            ul.innerHTML = listhtml
+        }
+        else{
+            ul.innerHTML = "";
+        }
+    }
+
+    show()
+
+
+    removeallbtn.addEventListener('click',()=>{
+        var arylist = localStorage.getItem('todolist');
+        localStorage.removeItem('todolist')  
+        ul.innerHTML = "";
+        update.style.display="none"
+        addtaskbtn.style.display = "block" 
+        taskinput.value = "";
+    })
+
+
+
+    function editindax(indax){
+       
+        var arylist = localStorage.getItem('todolist');
+        arylist = JSON.parse(arylist);
+        taskinput.value = arylist[indax]
+        saveindax.value = indax
+        update.style.display="block"
+        addtaskbtn.style.display = "none" 
+    }
+
+
+   update.addEventListener('click',()=>{
+       var arylist = localStorage.getItem('todolist')
+       arylist = JSON.parse(arylist);
+       saveindax = saveindax.value;
+       arylist[saveindax] = taskinput.value
+       localStorage.setItem('todolist',JSON.stringify(arylist));
+        location.reload()
+       show()
+       taskinput.value = "";
+       update.style.display="none"
+        addtaskbtn.style.display = "block" 
+   })
+
+
+   function deleteindax(indax){
+        var arylist = localStorage.getItem('todolist')
+        var parsdata = JSON.parse(arylist)
+        parsdata.splice(indax, 1)
+        localStorage.setItem('todolist',JSON.stringify(parsdata))      
+        show()
+    }
+
+
+    function searchdata(e){
+        var search = e.target.value
+        // console.log(search);
+        var getdata = localStorage.getItem('todolist');
+        if(!getdata){
+            return false
+        }
+        else{
+            getdata = JSON.parse(getdata)
+            getdata = getdata.filter(value =>{
+                return value.includes(search)
+            })
+            itemsHTML = "";
+            if(getdata.length){
+                getdata.forEach((ele,indax)=>{
+                    itemsHTML+=` <li class="list"><h1 class="indax">${indax+1}</h1>${ele}
+                                    <button class="edit" onclick="editindax(${indax})">
+                                        <i class="far fa-edit"></i>Edit
+                                    </button>
+
+                                    <button class="delete" onclick="deleteindax(${indax})">
+                                        <i class="far fa-trash-alt"></i>Delete
+                                    </button>
+                                </li>`
+                })
+             ul.innerHTML=itemsHTML;   
+            }
+            
+        }
+
+    }
+</script>
+
+
+</html>
